@@ -4,27 +4,26 @@ using UnityEngine;
 using UnityEngine.InputSystem;
 
 public class PlayerMovement : MonoBehaviour
+
 {
+    
     Vector2 moveInput;
     Rigidbody2D myRigid;
     [SerializeField] float runSpeed = 10f;
     [SerializeField] float jumpSpeed = 10f;
+    [SerializeField] GameObject bullet;
+    [SerializeField] Transform gun;
     CapsuleCollider2D myCapsuleCollider;
     Animator myAnimator;
     
 
-    
-
-
     //declare references in Start()
     void Start()
     {
-    
-        
-        
         myRigid = GetComponent<Rigidbody2D>();
         myAnimator = GetComponent<Animator>();
         myCapsuleCollider = GetComponent<CapsuleCollider2D>();
+       
     }
     
     
@@ -32,11 +31,17 @@ public class PlayerMovement : MonoBehaviour
     {
         Run();
         FlipSprite();
+        
     }
     void OnMove(InputValue value)
     {
         moveInput = value.Get<Vector2>();
         Debug.Log(moveInput);
+    }
+    void OnFire(InputValue value)  
+    {
+        myAnimator.SetBool("isShooting",true);
+        Instantiate(bullet, gun.position, transform.rotation);
     }
     void Run()
     {
@@ -76,4 +81,5 @@ public class PlayerMovement : MonoBehaviour
         }
        
     }
+    
 }
