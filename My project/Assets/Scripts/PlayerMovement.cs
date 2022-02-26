@@ -15,7 +15,13 @@ public class PlayerMovement : MonoBehaviour
     [SerializeField] Transform gun;
     CapsuleCollider2D myCapsuleCollider;
     Animator myAnimator;
-    
+    [SerializeField] float dashSpeed = 20f;
+    bool isDashing = false;
+
+
+
+
+
 
     //declare references in Start()
     void Start()
@@ -23,8 +29,9 @@ public class PlayerMovement : MonoBehaviour
         myRigid = GetComponent<Rigidbody2D>();
         myAnimator = GetComponent<Animator>();
         myCapsuleCollider = GetComponent<CapsuleCollider2D>();
-       
+        
     }
+    
     
     
     void Update()
@@ -32,6 +39,7 @@ public class PlayerMovement : MonoBehaviour
         Run();
         FlipSprite();
         
+       
     }
     void OnMove(InputValue value)
     {
@@ -40,7 +48,13 @@ public class PlayerMovement : MonoBehaviour
     }
     void OnFire(InputValue value)  
     {
-        myAnimator.SetBool("isShooting",true);
+        if (value.isPressed)
+        {
+            myAnimator.SetBool("isShooting", true);
+        }
+       
+        
+            
         Instantiate(bullet, gun.position, transform.rotation);
     }
     void Run()
@@ -57,7 +71,7 @@ public class PlayerMovement : MonoBehaviour
     }
     
     
-    void OnJump(InputValue value)  //OnJUmp is automatically recognized by unity, which will run when the jump button was pressed
+    void OnJump(InputValue value)  //OnJump() is automatically recognized by unity, which will run when the jump button was pressed
     {
     //if it is pressed and also the capsulecollider of the player is touching Groundlayer(is on ground)
     //then add velocity to y so it can jump ONCE 
@@ -66,7 +80,9 @@ public class PlayerMovement : MonoBehaviour
             myRigid.velocity += new Vector2(0f,jumpSpeed);
         }
     }
+    
 
+   
     void FlipSprite()
     {
         // if the player is moving, change the way it faces based on the velocity(if velocity is positive,face right, vice versa
@@ -81,5 +97,27 @@ public class PlayerMovement : MonoBehaviour
         }
        
     }
-    
+
+    IEnumerator DashCoroutine(int dashDuration)
+    {
+        if (isDashing)
+            yield break;
+
+        isDashing = true;
+        myRigid.velocity = new Vector2(dashSpeed, 0);
+
+        yield return new WaitForSeconds(dashDuration);
+
+        myRigid.velocity = new Vector2(0, 0);
+
+        isDashing = false;
+    }
+    void OnDash(InputValue value)
+    {
+        if (value.isPressed)
+        {
+            StartCoroutine(DashCoroutine(5));
+        }
+    }
+
 }

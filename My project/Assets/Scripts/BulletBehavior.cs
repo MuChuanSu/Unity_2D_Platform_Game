@@ -20,9 +20,8 @@ public class BulletBehavior : MonoBehaviour
         Destroy(gameObject); // this means destroy the bullet itself
     }
 
-    void OnCollisionEnter2D(Collider2D other)
+    void OnCollisionEnter2D(Collision2D other)
     {
-      
         Destroy(gameObject); // this means destroy the bullet itself
     }
 
@@ -41,6 +40,7 @@ public class BulletBehavior : MonoBehaviour
     {
         myRigid.velocity = new Vector2(xSpeed, 0f); 
     }
+    
 
     
 }
